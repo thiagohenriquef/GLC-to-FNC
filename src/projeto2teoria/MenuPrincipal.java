@@ -9,8 +9,10 @@ import Auxiliar.MontadorLinguagem;
 import Modelo.Producao;
 import Modelo.Terminal;
 import Modelo.Variavel;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -19,31 +21,42 @@ import java.util.Scanner;
  * @author thiago
  */
 public class MenuPrincipal {
+    File file = new File("");
     Arquivo arq = new Arquivo();
     MontadorLinguagem montador = new MontadorLinguagem();
-    private ArrayList<Producao> pro = new ArrayList<>();
-    private ArrayList<Terminal> ter = new ArrayList<>();
-    private ArrayList<Variavel> var = new ArrayList<>();
-    //private ArrayList<ArrayList> array = new ArrayList<>();
-
+    private static ArrayList<Producao> pro = new ArrayList<>();
+    private static ArrayList<Terminal> ter = new ArrayList<>();
+    private static ArrayList<Variavel> var = new ArrayList<>();
+    String so = System.getProperty("os.name");
+    
     public MenuPrincipal() {
     }
     
-    
-    
-    MenuPrincipal(String arg) throws Exception {
+    MenuPrincipal(String[] arg) throws Exception {
         try {
-            Scanner entrada = new Scanner(new FileReader(arg));
+            Scanner entrada = new Scanner(new FileReader(arg[0]));
             var = arq.variaveis(entrada);
             ter = arq.terminais(entrada);
             pro = arq.producoes(entrada);
-            //pro = arq.leituraArquivo(arg);
+            
             montador.chomsky(pro, var, ter);
+            
+            FileWriter arq = new FileWriter(arg[1], false);
+            arq.flush();
+            Arquivo.gravaArquivo(pro, ter, var, arq);
+            
+            arq.close();
+            entrada.close();
         } catch (FileNotFoundException ex) {
-            //System.out.println("Ocorreu um erro na leitura do arquivo");
-            //ex.printStackTrace();
             throw new Exception(ex);
+        }finally{
+            if(so.equals("Linux")){
+                System.out.println("Arquivo de saída salvo em "+file.getAbsolutePath()+"/"+arg[1]);
+            }else{
+                System.out.println("Arquivo de saída salvo em "+file.getAbsolutePath()+"\\"+arg[1]);
+            }
         }
+        
     }
 
     public ArrayList<Producao> getPro() {
@@ -54,21 +67,25 @@ public class MenuPrincipal {
         this.pro = pro;
     }
 
-    public ArrayList<Terminal> getTer() {
+    public static ArrayList<Terminal> getTer() {
         return ter;
     }
 
-    public void setTer(ArrayList<Terminal> ter) {
-        this.ter = ter;
+    public static void setTer(ArrayList<Terminal> ter) {
+        MenuPrincipal.ter = ter;
     }
 
-    public ArrayList<Variavel> getVar() {
+    public static ArrayList<Variavel> getVar() {
         return var;
     }
 
-    public void setVar(ArrayList<Variavel> var) {
-        this.var = var;
+    public static void setVar(ArrayList<Variavel> var) {
+        MenuPrincipal.var = var;
     }
    
-    
+    public static void imprimeProducao(ArrayList<Producao> pro){
+        for(Producao p: pro){
+            System.out.println(p);
+        }
+    }
 }

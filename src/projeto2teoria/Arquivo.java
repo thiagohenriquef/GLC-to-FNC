@@ -3,9 +3,10 @@ package projeto2teoria;
 import Modelo.Terminal;
 import Modelo.Variavel;
 import Modelo.Producao;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 /*
@@ -19,17 +20,22 @@ import java.util.Scanner;
  * @author thiago
  */
 public class Arquivo {
+
     private ArrayList<Variavel> var = new ArrayList<Variavel>();
     private ArrayList<Terminal> ter = new ArrayList<Terminal>();
     private ArrayList<Producao> pro = new ArrayList<Producao>();
     
     public Arquivo() {
     }
+
     
-    public ArrayList leituraArquivo(String filename) throws FileNotFoundException{
-        /*Scanner entrada = new Scanner(new FileReader(filename));
-        
-        System.out.println(entrada.nextLine()); // tipo de formalismo
+    /**
+     * Salva as variaveis do programa
+     * @param entrada
+     * @return 
+     */
+    public ArrayList<Variavel> variaveis(Scanner entrada) {
+        entrada.nextLine(); // tipo de formalismo
         entrada.nextLine(); // listagem das variáveis
         
         String quant = entrada.nextLine(); //quantidade de variaveis
@@ -40,18 +46,34 @@ public class Arquivo {
         for(int i=0; i<n; i++){
             String nome = String.valueOf(entrada.nextLine().charAt(0));
             var.add(new Variavel(nome));
-        }*/
-        
-        /*entrada.nextLine(); //listagem dos terminais
+        }
+        return var;
+    }
+
+    /**
+     * Salva os terminais
+     * @param entrada
+     * @return 
+     */
+    public ArrayList<Terminal> terminais(Scanner entrada) {
+        entrada.nextLine(); //listagem dos terminais
         
         //Salvar terminais
         int num = Character.getNumericValue(entrada.nextLine().charAt(0));
         for(int i=0; i<num; i++){
             String nome = String.valueOf(entrada.nextLine().charAt(0));
             ter.add(new Terminal(nome));
-        }*/
-        
-        /*entrada.nextLine(); //Listagem das regras de produção
+        }
+        return ter;
+    }
+    
+    /**
+     * Salva as produções
+     * @param entrada
+     * @return 
+     */
+    public ArrayList<Producao> producoes(Scanner entrada) {
+        entrada.nextLine(); //Listagem das regras de produção
        
         //Salvar regras de produção
         while(entrada.hasNext()){
@@ -60,24 +82,42 @@ public class Arquivo {
             String[] partes = ent.split(" ");
             String dir = partes[0];
             pro.add(new Producao(esq, dir));
-        }*/
-        
-        /*for(Variavel v: var){
-            System.out.println(v);
         }
-        
-        for(Terminal t : ter){
-            System.out.println(t);
-        }
-        
-        for(Producao p : pro){
-            System.out.println(p);
-        }*/
-        
         return pro;
-    
     }
-
+    
+    /**
+     * grava as informações em arquivo
+     * @param pro
+     * @param ter
+     * @param var
+     * @param arquivo 
+     */
+    static void gravaArquivo(ArrayList<Producao> pro, ArrayList<Terminal> ter, ArrayList<Variavel> var, FileWriter arquivo) {
+        PrintWriter gravarArq = new PrintWriter(arquivo);
+        
+        gravarArq.printf("FNC Identifica o tipo de formalismo\n");
+        
+        gravarArq.printf("# Listagem das variáveis\n");
+        gravarArq.printf(var.size()+"\tNúmero de váriaveis\n");
+        
+        for(int i=0; i<var.size(); i++){
+            gravarArq.printf(var.get(i)+"\tVáriavel "+i+"\n");
+        }
+        
+        gravarArq.printf("# Listagem dos Terminais \n");
+        gravarArq.printf(ter.size()+"#\tNúmero de terminais\n");
+        for(int i=0; i<ter.size(); i++){
+            gravarArq.printf(ter.get(i)+"\tSímbolo Terminal "+i+"\n");
+        }
+        
+        gravarArq.printf("# Listagem das regras de produção\n");
+        for(int i=0; i<pro.size(); i++){
+            gravarArq.printf(pro.get(i).getLadoEsq()+"\tLado esquerdo da produção "+pro.get(i)+"\n");
+            gravarArq.printf(pro.get(i).getLadoDir()+"\tLado direito da produção "+pro.get(i)+"\n");
+        }
+    }
+    
     public ArrayList<Variavel> getVar() {
         return var;
     }
@@ -100,48 +140,6 @@ public class Arquivo {
 
     public void setPro(ArrayList<Producao> pro) {
         this.pro = pro;
-    }
-
-    public ArrayList<Variavel> variaveis(Scanner entrada) {
-        System.out.println(entrada.nextLine()); // tipo de formalismo
-        entrada.nextLine(); // listagem das variáveis
-        
-        String quant = entrada.nextLine(); //quantidade de variaveis
-        char c = quant.charAt(0);
-        int n = Character.getNumericValue(c);
-        
-        //Salvar variaveis
-        for(int i=0; i<n; i++){
-            String nome = String.valueOf(entrada.nextLine().charAt(0));
-            var.add(new Variavel(nome));
-        }
-        return var;
-    }
-
-    public ArrayList<Terminal> terminais(Scanner entrada) {
-        entrada.nextLine(); //listagem dos terminais
-        
-        //Salvar terminais
-        int num = Character.getNumericValue(entrada.nextLine().charAt(0));
-        for(int i=0; i<num; i++){
-            String nome = String.valueOf(entrada.nextLine().charAt(0));
-            ter.add(new Terminal(nome));
-        }
-        return ter;
-    }
-
-    public ArrayList<Producao> producoes(Scanner entrada) {
-        entrada.nextLine(); //Listagem das regras de produção
-       
-        //Salvar regras de produção
-        while(entrada.hasNext()){
-            String esq = String.valueOf(entrada.nextLine().charAt(0));  
-            String ent = entrada.nextLine();
-            String[] partes = ent.split(" ");
-            String dir = partes[0];
-            pro.add(new Producao(esq, dir));
-        }
-        return pro;
     }
 
 }

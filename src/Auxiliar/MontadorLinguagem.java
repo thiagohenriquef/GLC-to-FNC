@@ -22,20 +22,13 @@ public class MontadorLinguagem {
     public MontadorLinguagem() {
     }
     
-    
-    public void imprimeProducao(ArrayList<Producao> pro){
-        for(Producao p: pro){
-            System.out.println(p);
-        }
-    }
-    
     public void chomsky(ArrayList<Producao> pro, ArrayList<Variavel> var, ArrayList<Terminal> ter) {
         pro = removeProducoesVazias(pro); //remove producoes vazias nao aceitas na FNC pura
         pro = trocaTerminalPorVariavel(pro, var); //troca as producoes terminais por variaveis da forma variavel(terminal)
-        //pro = defineVariaveis(pro); //define com que cada produção possua apenas 2 variaveis
-        this.imprimeProducao(pro);
-        //System.out.println((char) (var.get(var.size()-1).getLadoEsq().charAt(0)+1));
+        pro = defineVariaveis(pro, var); //define com que cada produção possua apenas 2 variaveis
+        //MenuPrincipal.imprimeProducao(pro);
     }
+    
     /**
      * Remove todas as produções vazias da GLC, pois não são aceitas na FNC pura
      * @param pro todas as produções
@@ -90,7 +83,19 @@ public class MontadorLinguagem {
             }    
         }
         
-        for(int count=0; count<pro.size(); count++){
+        MenuPrincipal.setVar(var);
+        return pro;
+    }
+    
+    /**
+     * reduz o lado direito até que ele possua apenas 2 variáveis
+     * @param pro as regras de produção
+     * @param var as variaveis do programa
+     * @return as regras de produção
+     */
+    public ArrayList<Producao> defineVariaveis(ArrayList<Producao> pro, ArrayList<Variavel> var){
+        
+        for(int count=0; count<pro.size(); count++){    //reduzir até ocorrer apenas 2 variaveis
             
             char ultLetra = var.get(var.size()-1).getLadoEsq().charAt(0); //ultima letra salva no array de variaveis
             
@@ -109,9 +114,12 @@ public class MontadorLinguagem {
                 p = new Producao(esquerda, direita); //cria a nova produção
                 pro.set(count, p);  //atualiza a produção que foi removida as variaveis
                 var.add(new Variavel(String.valueOf(ultLetra)));    //salva uma nova variavel
+                
+                
             }
             
         }
+        
         return pro; 
     }
     
@@ -121,9 +129,6 @@ public class MontadorLinguagem {
     
     public static boolean isLowerCase(String string) {  
         return string.toLowerCase().equals(string);  
-    }
-
-    
-    
+    } 
     
 }

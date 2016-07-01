@@ -19,7 +19,7 @@ public class Projeto2Teoria {
     public static void main(String[] args) {
         try {
             // TODO code application logic here
-            MenuPrincipal menu = new MenuPrincipal(args[0]);
+            MenuPrincipal menu = new MenuPrincipal(args);
         } catch (Exception e) {
             System.out.println("Arquivo não encontrado\nSaindo do programa");
             System.exit(0);
