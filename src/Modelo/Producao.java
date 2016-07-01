@@ -42,7 +42,4 @@ public class Producao {
         return ladoEsq + "->" + ladoDir ;
     }
     
-    
-    
-    
 }
