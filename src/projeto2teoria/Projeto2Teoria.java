@@ -21,7 +21,8 @@ public class Projeto2Teoria {
             // TODO code application logic here
             MenuPrincipal menu = new MenuPrincipal(args);
         } catch (Exception e) {
-            System.out.println("Arquivo não encontrado\nSaindo do programa");
+            System.out.println("Ocorreu um erro, por favor verifique o nome do arquivo de entrada");
+            e.printStackTrace();
             System.exit(0);
         }
     }

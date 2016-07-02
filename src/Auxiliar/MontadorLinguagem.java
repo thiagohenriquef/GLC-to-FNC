@@ -94,7 +94,7 @@ public class MontadorLinguagem {
      * @return as regras de produção
      */
     public ArrayList<Producao> defineVariaveis(ArrayList<Producao> pro, ArrayList<Variavel> var){
-        
+
         for(int count=0; count<pro.size(); count++){    //reduzir até ocorrer apenas 2 variaveis
             
             char ultLetra = var.get(var.size()-1).getLadoEsq().charAt(0); //ultima letra salva no array de variaveis

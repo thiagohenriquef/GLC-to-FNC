@@ -1,5 +1,6 @@
 package projeto2teoria;
 
+import Auxiliar.MontadorLinguagem;
 import Modelo.Terminal;
 import Modelo.Variavel;
 import Modelo.Producao;
@@ -14,7 +15,6 @@ import java.util.Scanner;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author thiago
@@ -24,100 +24,169 @@ public class Arquivo {
     private ArrayList<Variavel> var = new ArrayList<Variavel>();
     private ArrayList<Terminal> ter = new ArrayList<Terminal>();
     private ArrayList<Producao> pro = new ArrayList<Producao>();
-    
+
     public Arquivo() {
     }
 
-    
+    public void leArquivo(Scanner entrada) {
+        while (entrada.hasNext()) {
+            String x = entrada.nextLine();
+
+            if (x.charAt(0) == '#') {
+                entrada.nextLine();
+            }
+        }
+    }
+
     /**
      * Salva as variaveis do programa
+     *
      * @param entrada
-     * @return 
+     * @return
      */
     public ArrayList<Variavel> variaveis(Scanner entrada) {
-        entrada.nextLine(); // tipo de formalismo
-        entrada.nextLine(); // listagem das variáveis
-        
-        String quant = entrada.nextLine(); //quantidade de variaveis
-        char c = quant.charAt(0);
-        int n = Character.getNumericValue(c);
-        
+        String x = "";
+        x = entrada.nextLine();
+        while (true) {
+            if (Character.isDigit(x.charAt(0))) {
+                break;
+            } else {
+                x = entrada.nextLine();
+            }
+        }
+
+        int n = Integer.parseInt("" + x.charAt(0));
+
         //Salvar variaveis
-        for(int i=0; i<n; i++){
-            String nome = String.valueOf(entrada.nextLine().charAt(0));
-            var.add(new Variavel(nome));
+        for (int i = 0; i < n; i++) {
+            while (true) {
+                x = entrada.nextLine();
+                if (x.charAt(0) != '#') {
+                    break;
+                } else {
+                    continue;
+                }
+            }
+            var.add(new Variavel("" + x.charAt(0)));
         }
         return var;
     }
 
     /**
      * Salva os terminais
+     *
      * @param entrada
-     * @return 
+     * @return
      */
     public ArrayList<Terminal> terminais(Scanner entrada) {
-        entrada.nextLine(); //listagem dos terminais
-        
+        String x = ""; // listagem dos terminais
+        x = entrada.nextLine();
+        while (true) {
+            if (Character.isDigit(x.charAt(0))) {
+                break;
+            } else {
+                x = entrada.nextLine();
+            }
+        }
+
         //Salvar terminais
-        int num = Character.getNumericValue(entrada.nextLine().charAt(0));
-        for(int i=0; i<num; i++){
-            String nome = String.valueOf(entrada.nextLine().charAt(0));
-            ter.add(new Terminal(nome));
+        int num = Integer.parseInt("" + x.charAt(0));
+        for (int i = 0; i < num; i++) {
+            while (true) {
+                x = entrada.nextLine();
+                if (x.charAt(0) == '#') {
+                    continue;
+                } else {
+                    break;
+                }
+            }
+            String nome = "" + x.charAt(0);
+            //if (nome.equals('&')) continue;
+            if (MontadorLinguagem.isUpperCase(nome)) {
+                System.out.println("eliminando simbolo terminal " + nome + " por não ser minusculo");
+                continue;
+            }
+
+            Terminal t = new Terminal(nome);
+            ter.add(t);
         }
         return ter;
     }
-    
+
     /**
      * Salva as produções
+     *
      * @param entrada
-     * @return 
+     * @return
      */
     public ArrayList<Producao> producoes(Scanner entrada) {
-        entrada.nextLine(); //Listagem das regras de produção
-       
+        String x = ""; // listagem das produções
+
         //Salvar regras de produção
-        while(entrada.hasNext()){
-            String esq = String.valueOf(entrada.nextLine().charAt(0));  
-            String ent = entrada.nextLine();
-            String[] partes = ent.split(" ");
-            String dir = partes[0];
-            pro.add(new Producao(esq, dir));
+        while (entrada.hasNextLine()) {
+            try {
+                while (true) {
+                    x = entrada.nextLine();
+                    if (x.charAt(0) == '#') {
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+                String esq = "" + x.charAt(0);
+
+                while (true) {
+                    x = entrada.nextLine();
+                    if (x.charAt(0) == '#') {
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+                String ent = x;
+                String[] partes = ent.split(" ");
+                String dir = partes[0];
+                pro.add(new Producao(esq, dir));
+            } catch (Exception e) {
+                break;
+            }
         }
         return pro;
     }
-    
+
     /**
      * grava as informações em arquivo
+     *
      * @param pro
      * @param ter
      * @param var
-     * @param arquivo 
+     * @param arquivo
      */
     static void gravaArquivo(ArrayList<Producao> pro, ArrayList<Terminal> ter, ArrayList<Variavel> var, FileWriter arquivo) {
         PrintWriter gravarArq = new PrintWriter(arquivo);
-        
-        gravarArq.printf("FNC Identifica o tipo de formalismo\n");
-        
+
+        gravarArq.printf("FNC #Identifica o tipo de formalismo\n");
+
         gravarArq.printf("# Listagem das variáveis\n");
-        gravarArq.printf(var.size()+"\tNúmero de váriaveis\n");
-        
-        for(int i=0; i<var.size(); i++){
-            gravarArq.printf(var.get(i)+"\tVáriavel "+i+"\n");
+        gravarArq.printf(var.size() + "\t#Número de váriaveis\n");
+
+        for (int i = 0; i < var.size(); i++) {
+            gravarArq.printf(var.get(i) + "\t#Váriavel " + i + "\n");
         }
-        
+
         gravarArq.printf("# Listagem dos Terminais \n");
-        gravarArq.printf(ter.size()+"#\tNúmero de terminais\n");
-        for(int i=0; i<ter.size(); i++){
-            gravarArq.printf(ter.get(i)+"\tSímbolo Terminal "+i+"\n");
+        gravarArq.printf(ter.size() + "\t#Número de terminais\n");
+        for (int i = 0; i < ter.size(); i++) {
+            gravarArq.printf(ter.get(i) + "\t#Símbolo Terminal " + i + "\n");
         }
-        
+
         gravarArq.printf("# Listagem das regras de produção\n");
-        for(int i=0; i<pro.size(); i++){
-            gravarArq.printf(pro.get(i).getLadoEsq()+"\tLado esquerdo da produção "+pro.get(i)+"\n");
-            gravarArq.printf(pro.get(i).getLadoDir()+"\tLado direito da produção "+pro.get(i)+"\n");
+        for (Producao pro1 : pro) {
+            gravarArq.printf(pro1.getLadoEsq() + "\t#Lado esquerdo da produção " + pro1 + "\n");
+            gravarArq.printf(pro1.getLadoDir() + "\t#Lado direito da produção " + pro1 + "\n");
         }
     }
-    
+
     public ArrayList<Variavel> getVar() {
         return var;
     }
@@ -142,4 +211,14 @@ public class Arquivo {
         this.pro = pro;
     }
 
+    public boolean checaComentario(Scanner entrada) {
+        String x = "";
+        while (true) {
+            x = entrada.nextLine();
+            if (x.charAt(0) == '#') {
+                break;
+            }
+        }
+        return true;
+    }
 }

@@ -9,6 +9,7 @@ import Auxiliar.MontadorLinguagem;
 import Modelo.Producao;
 import Modelo.Terminal;
 import Modelo.Variavel;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -35,6 +36,7 @@ public class MenuPrincipal {
     MenuPrincipal(String[] arg) throws Exception {
         try {
             Scanner entrada = new Scanner(new FileReader(arg[0]));
+            //BufferedReader buff = new BufferedReader(entrada);
             var = arq.variaveis(entrada);
             ter = arq.terminais(entrada);
             pro = arq.producoes(entrada);
@@ -47,14 +49,13 @@ public class MenuPrincipal {
             
             arq.close();
             entrada.close();
-        } catch (FileNotFoundException ex) {
-            throw new Exception(ex);
-        }finally{
             if(so.equals("Linux")){
                 System.out.println("Arquivo de saída salvo em "+file.getAbsolutePath()+"/"+arg[1]);
             }else{
                 System.out.println("Arquivo de saída salvo em "+file.getAbsolutePath()+"\\"+arg[1]);
             }
+        } catch (FileNotFoundException ex) {
+            throw new Exception(ex);
         }
         
     }
