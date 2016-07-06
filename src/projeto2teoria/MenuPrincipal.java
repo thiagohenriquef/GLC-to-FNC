@@ -36,7 +36,6 @@ public class MenuPrincipal {
     MenuPrincipal(String[] arg) throws Exception {
         try {
             Scanner entrada = new Scanner(new FileReader(arg[0]));
-            //BufferedReader buff = new BufferedReader(entrada);
             var = arq.variaveis(entrada);
             ter = arq.terminais(entrada);
             pro = arq.producoes(entrada);
